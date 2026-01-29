@@ -1,0 +1,54 @@
+{
+  "lenguasMaternas": ["Español", "Catalán", "Gallego", "Euskera", "Inglés", "Francés", "Alemán", "Chino", "Árabe"],
+  "idiomas": ["Inglés", "Catalán", "Gallego", "Euskera", "Francés", "Alemán", "Italiano", "Portugués", "Chino", "Japonés", "Ruso"],
+  "profesiones": ["Ingeniero/a", "Médico/a", "Profesor/a", "Arquitecto/a", "Abogado/a", "Autónomo/a", "Empleado/a del hogar", "Estudiante", "Jubilado/a", "Otros"],
+  "alergias": ["Polen", "Ácaros", "Lactosa", "Gluten", "Frutos secos", "Penicilina", "Pelo de animales", "Ninguna"],
+  "nivelesEstudios": ["Primaria", "ESO", "Bachillerato", "Grado Medio", "Grado Superior", "Grado Universitario", "Máster", "Doctorado"],
+  "nivelesSolicitados": ["1º Primaria", "2º Primaria", "3º Primaria", "4º Primaria", "5º Primaria", "6º Primaria", "1º ESO", "2º ESO", "3º ESO", "4º ESO", "1º Bachillerato", "2º Bachillerato"],
+  "ciudadesNacimiento": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia", "Palma", "Las Palmas", "Bilbao"],
+  "ubicaciones": [
+    {
+      "pais": "España",
+      "ciudades": [
+        {
+          "nombre": "Madrid",
+          "poblaciones": ["Madrid Centro", "Alcobendas", "Móstoles", "Alcalá de Henares"]
+        },
+        {
+          "nombre": "Barcelona",
+          "poblaciones": ["Barcelona Centro", "Badalona", "Sabadell", "Hospitalet de Llobregat"]
+        },
+        {
+          "nombre": "Valencia",
+          "poblaciones": ["Valencia Centro", "Torrent", "Gandía", "Paterna"]
+        }
+      ]
+    },
+    {
+      "pais": "México",
+      "ciudades": [
+        {
+          "nombre": "Ciudad de México",
+          "poblaciones": ["Iztapalapa", "Gustavo A. Madero", "Álvaro Obregón"]
+        },
+        {
+          "nombre": "Guadalajara",
+          "poblaciones": ["Zapopan", "Tlaquepaque", "Tonalá"]
+        }
+      ]
+    },
+    {
+      "pais": "Argentina",
+      "ciudades": [
+        {
+          "nombre": "Buenos Aires",
+          "poblaciones": ["CABA", "La Plata", "Mar del Plata"]
+        },
+        {
+          "nombre": "Córdoba",
+          "poblaciones": ["Córdoba Capital", "Villa Carlos Paz", "Río Cuarto"]
+        }
+      ]
+    }
+  ]
+}
