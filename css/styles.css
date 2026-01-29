@@ -1,23 +1,30 @@
-/* styles.css - Estilos para el Formulario de Registro */
+/* styles.css - Estilos personalizados para el Formulario de Registro */
 
+/* Definimos algunos colores globales para usarlos en todo el documento fácilmente */
 :root {
     --primary-color: #0d6efd;
+    /* Azul de Bootstrap */
     --error-color: #dc3545;
+    /* Rojo para errores */
     --success-color: #198754;
+    /* Verde para aciertos */
 }
 
 body {
     background-color: #f8f9fa;
+    /* Gris muy clarito para el fondo */
     padding-top: 2rem;
     padding-bottom: 4rem;
 }
 
+/* El contenedor principal donde va todo el formulario */
 .container {
     max-width: 900px;
     background: white;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    /* Sombra suave para dar profundidad */
 }
 
 h2 {
@@ -27,6 +34,7 @@ h2 {
     padding-bottom: 0.5rem;
 }
 
+/* Estilo para los recuadros de cada sección (A, B, C...) */
 fieldset {
     border: 1px solid #dee2e6;
     border-radius: 8px;
@@ -34,6 +42,7 @@ fieldset {
     margin-bottom: 2rem;
 }
 
+/* El título que aparece arriba a la izquierda de cada recuadro (fieldset) */
 legend {
     float: none;
     width: auto;
@@ -43,6 +52,7 @@ legend {
     color: #495057;
 }
 
+/* Mensajes de error que mostramos cuando algo falla */
 .error-message {
     color: var(--error-color);
     font-size: 0.875rem;
@@ -50,10 +60,12 @@ legend {
     display: none;
 }
 
-.is-invalid + .error-message {
+/* Si un campo es inválido, mostramos su mensaje de error */
+.is-invalid+.error-message {
     display: block;
 }
 
+/* Bloque visual para cada familiar que añadimos */
 .familiar-block {
     position: relative;
     background-color: #fdfdfe;
@@ -63,22 +75,25 @@ legend {
     margin-bottom: 1rem;
 }
 
+/* Botón de la X para borrar a un familiar */
 .btn-remove-familiar {
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
-/* Mejora para los select de Bootstrap*/
+/* Hacemos que los selectores múltiples tengan un tamaño fijo para que no se vean raros */
 select[multiple] {
     height: 120px;
 }
 
+/* Espacio reservado para los mensajes de error de Bootstrap */
 .invalid-feedback {
     display: block;
     min-height: 1.25rem;
 }
 
+/* Estilos para las tarjetas que salen en el resumen final */
 .card-summary {
     margin-bottom: 1rem;
 }

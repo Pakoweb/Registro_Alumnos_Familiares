@@ -1,14 +1,16 @@
 /**
- app.js - Lógica del Formulario de Registro
-
+ * app.js - Lógica del Formulario de Registro
+ * Este archivo gestiona todo el comportamiento dinámico del formulario,
+ * desde la carga de datos hasta la validación y el resumen final.
  */
 
 "use strict";
 
-// --- 1. Clases  ---
+// --- 1. Definición de Clases y Prototipos ---
 
 /**
- * Clase Alumno
+ * Representa a un Alumno con toda su información asociada.
+ * Usamos una función constructora para inicializar el objeto.
  */
 function Alumno() {
     this.datosAlumno = {};
@@ -19,9 +21,11 @@ function Alumno() {
 }
 
 /**
- * Genera HTML de los datos del alumno
+ * Crea el contenido HTML que se mostrará en el modal de confirmación.
+ * Recorre todos los datos guardados en el objeto Alumno.
  */
-Alumno.prototype.getResumen = function() {
+Alumno.prototype.getResumen = function () {
+    // Generamos el HTML para cada familiar añadido
     let familiaresHtml = this.familiares.map((f, index) => `
         <div class="card card-summary">
             <div class="card-body">
@@ -33,6 +37,7 @@ Alumno.prototype.getResumen = function() {
         </div>
     `).join('');
 
+    // Devolvemos el bloque completo de resumen
     return `
         <div class="mb-4">
             <h5>Datos Personales</h5>
@@ -63,67 +68,72 @@ Alumno.prototype.getResumen = function() {
         <div class="mb-4">
             <h5>Información Médica</h5>
             <p><strong>Alergias:</strong> ${this.infoMedica.alergias.length > 0 ? this.infoMedica.alergias.join(', ') : 'Ninguna'}</p>
-            <p><strong>Medicación:</strong> ${this.infoMedica.medicacion || 'N/A'}</p>
+            <p><strong>Medicación:</strong> ${this.infoMedica.medicacion || 'No indica'}</p>
         </div>
     `;
 };
 
 /**
- * AlumnoBuilder - Patrón Builder para construir el objeto Alumno
+ * Patrón Builder: Ayuda a construir el objeto Alumno paso a paso
+ * de una forma más limpia y organizada.
  */
 function AlumnoBuilder() {
     this.alumno = new Alumno();
 }
 
-AlumnoBuilder.prototype.setDatosPersonales = function(datos) {
+AlumnoBuilder.prototype.setDatosPersonales = function (datos) {
     this.alumno.datosAlumno = datos;
     return this;
 };
 
-AlumnoBuilder.prototype.addFamiliar = function(familiar) {
+AlumnoBuilder.prototype.addFamiliar = function (familiar) {
     this.alumno.familiares.push(familiar);
     return this;
 };
 
-AlumnoBuilder.prototype.setDireccion = function(direccion) {
+AlumnoBuilder.prototype.setDireccion = function (direccion) {
     this.alumno.direccionActual = direccion;
     return this;
 };
 
-AlumnoBuilder.prototype.setDatosAcademicos = function(datos) {
+AlumnoBuilder.prototype.setDatosAcademicos = function (datos) {
     this.alumno.datosAcademicos = datos;
     return this;
 };
 
-AlumnoBuilder.prototype.setInfoMedica = function(info) {
+AlumnoBuilder.prototype.setInfoMedica = function (info) {
     this.alumno.infoMedica = info;
     return this;
 };
 
-AlumnoBuilder.prototype.build = function() {
+AlumnoBuilder.prototype.build = function () {
     return this.alumno;
 };
 
 
-// --- 2. Gestión de Datos y DOM ---
+// --- 2. Carga Inicial y Configuración del Formulario ---
 
-let opcionesData = null;
-let familiarCount = 0;
+let opcionesData = null; // Aquí guardaremos lo que venga del archivo JSON
+let familiarCount = 0;   // Contador para dar IDs únicos a los familiares
 
+// Al cargar la página, traemos los datos de configuración
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('data/opciones.json');
         opcionesData = await response.json();
-        
+
         inicializarFormulario();
     } catch (error) {
         console.error("Error cargando opciones.json:", error);
-        alert("Error al cargar los datos de configuración.");
+        alert("Atención: Asegúrate de estar usando un servidor local (XAMPP/Live Server) para cargar el JSON.");
     }
 });
 
+/**
+ * Prepara el formulario rellenando los desplegables con los datos del JSON
+ */
 function inicializarFormulario() {
-    // Poblar selects iniciales
+    // Rellenamos todos los selectores iniciales
     poblarSelect('lenguaAlumno', opcionesData.lenguasMaternas);
     poblarSelect('idiomasAlumno', opcionesData.idiomas);
     poblarSelect('pais', opcionesData.ubicaciones.map(u => u.pais));
@@ -132,31 +142,30 @@ function inicializarFormulario() {
     poblarSelect('idiomasEstudiados', opcionesData.idiomas);
     poblarSelect('alergias', opcionesData.alergias);
 
-    // Añadir el primer familiar obligatorio
+    // Por defecto, añadimos un familiar inicial
     añadirFamiliar();
 
-    // Eventos de dirección anidada
+    // Vinculamos los eventos para que la dirección cambie según el país/ciudad seleccionado
     document.getElementById('pais').addEventListener('change', actualizarCiudades);
     document.getElementById('ciudad').addEventListener('change', actualizarPoblaciones);
 
-    // Evento Añadir Familiar
+    // Botón para añadir más familiares
     document.getElementById('btnAddFamiliar').addEventListener('click', añadirFamiliar);
 
-    // Evento Submit
+    // Gestión del botón "Finalizar Registro"
     document.getElementById('registroForm').addEventListener('submit', manejarEnvio);
 
-    // Validaciones en tiempo real (opcional pero recomendado por requisitos)
+    // Configuramos que se valide cada campo nada más salir de él (onBlur)
     configurarValidacionesInstantaneas();
 }
 
 /**
- * Puebla un select con un array de strings o objetos
+ * Función genérica para llenar un elemento <select>
  */
 function poblarSelect(id, items, placeholder = "Selecciona...") {
     const el = document.getElementById(id);
     if (!el) return;
-    
-    // Mantener la primera opción si es placeholder
+
     const currentFirst = el.options[0];
     el.innerHTML = '';
     if (currentFirst && currentFirst.value === "") {
@@ -176,12 +185,15 @@ function poblarSelect(id, items, placeholder = "Selecciona...") {
     });
 }
 
-// --- 3. Lógica de Familiares Dinámicos ---
+// --- 3. Lógica para Gestionar Familiares Dinámicos ---
 
+/**
+ * Crea un nuevo bloque de formulario para un familiar y lo añade al contenedor
+ */
 function añadirFamiliar() {
     const container = document.getElementById('familiaresContainer');
     const index = familiarCount++;
-    
+
     const div = document.createElement('div');
     div.className = 'familiar-block shadow-sm mb-3 position-relative';
     div.id = `familiar-block-${index}`;
@@ -221,7 +233,7 @@ function añadirFamiliar() {
     `;
     container.appendChild(div);
 
-    // Poblar los selects del nuevo bloque
+    // Rellenamos los desplegables del nuevo bloque de familiar
     const block = document.getElementById(`familiar-block-${index}`);
     poblarSelectEl(block.querySelector('.fam-profesion'), opcionesData.profesiones);
     poblarSelectEl(block.querySelector('.fam-ciudadNac'), opcionesData.ciudadesNacimiento);
@@ -231,6 +243,9 @@ function añadirFamiliar() {
     actualizarVisibilidadBotonesEliminar();
 }
 
+/**
+ * Borra un bloque de familiar si hay más de uno
+ */
 function eliminarFamiliar(index) {
     const blocks = document.querySelectorAll('.familiar-block');
     if (blocks.length > 1) {
@@ -239,6 +254,9 @@ function eliminarFamiliar(index) {
     }
 }
 
+/**
+ * Oculta el botón de borrar si solo queda un familiar (es obligatorio tener al menos uno)
+ */
 function actualizarVisibilidadBotonesEliminar() {
     const blocks = document.querySelectorAll('.familiar-block');
     const btns = document.querySelectorAll('.btn-remove-familiar');
@@ -247,6 +265,7 @@ function actualizarVisibilidadBotonesEliminar() {
     });
 }
 
+// Función auxiliar para llenar un select pasando el elemento directamente
 function poblarSelectEl(el, items) {
     const optDefault = document.createElement('option');
     optDefault.value = "";
@@ -261,13 +280,14 @@ function poblarSelectEl(el, items) {
     });
 }
 
-// --- 4. Selección de Ubicación en Cascada ---
+// --- 4. Ubicaciones en Cascada (País > Ciudad > Población) ---
 
 function actualizarCiudades() {
     const paisNombre = this.value;
     const ciudadSelect = document.getElementById('ciudad');
     const poblacionSelect = document.getElementById('poblacion');
-    
+
+    // Reseteamos selects de abajo
     ciudadSelect.innerHTML = '<option value="">Selecciona...</option>';
     poblacionSelect.innerHTML = '<option value="">Selecciona ciudad primero...</option>';
     poblacionSelect.disabled = true;
@@ -277,6 +297,7 @@ function actualizarCiudades() {
         return;
     }
 
+    // Buscamos las ciudades del país seleccionado
     const paisData = opcionesData.ubicaciones.find(u => u.pais === paisNombre);
     if (paisData) {
         paisData.ciudades.forEach(c => {
@@ -301,6 +322,7 @@ function actualizarPoblaciones() {
         return;
     }
 
+    // Buscamos las poblaciones del país y ciudad elegidos
     const paisData = opcionesData.ubicaciones.find(u => u.pais === paisNombre);
     const ciudadData = paisData.ciudades.find(c => c.nombre === ciudadNombre);
 
@@ -315,22 +337,39 @@ function actualizarPoblaciones() {
     }
 }
 
-// --- 5. Validaciones (Requisito 4) ---
+// --- 5. Validaciones Matemáticas y de Formato ---
 
+/**
+ * Algoritmo oficial para validar que un NIF español es correcto
+ */
 function validarNIF(nif) {
-    const regex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+    if (nif && typeof nif !== "string") {
+        nif = nif.value ?? "";
+    }
+    nif = (nif ?? "").trim().toUpperCase();
+
+    // Comprobar formato básico (8 números y 1 letra)
+    const regex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
     if (!regex.test(nif)) return false;
 
+    // Comprobar que la letra corresponde al número (módulo 23)
     const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
     const numero = parseInt(nif.slice(0, 8), 10);
-    const letra = nif.slice(8).toUpperCase();
+    const letra = nif.slice(8);
+
     return letras[numero % 23] === letra;
 }
 
+/**
+ * Valida que el Código Postal tenga exactamente 5 números
+ */
 function validarCP(cp) {
     return /^[0-9]{5}$/.test(cp);
 }
 
+/**
+ * Recorre el formulario y añade eventos para validar los campos al perder el foco
+ */
 function configurarValidacionesInstantaneas() {
     const form = document.getElementById('registroForm');
     const inputs = form.querySelectorAll('input, select, textarea');
@@ -341,12 +380,15 @@ function configurarValidacionesInstantaneas() {
     });
 }
 
+/**
+ * Comprueba si un campo cumple con los requisitos y le pone color verde (ok) o rojo (error)
+ */
 function validarCampo(input) {
     let isValid = true;
-    
+
+    // Validar si es obligatorio
     if (input.required) {
         if (input.multiple) {
-            // Multiselect
             const selected = Array.from(input.options).filter(opt => opt.selected);
             isValid = selected.length > 0;
         } else {
@@ -354,7 +396,7 @@ function validarCampo(input) {
         }
     }
 
-    // Validaciones específicas
+    // Validaciones especiales por ID o clase
     if (isValid && input.id === 'nifAlumno') {
         isValid = validarNIF(input.value);
     }
@@ -365,6 +407,7 @@ function validarCampo(input) {
         isValid = validarCP(input.value);
     }
 
+    // Aplicar estilos de Bootstrap para aviso visual
     if (isValid) {
         input.classList.remove('is-invalid');
         input.classList.add('is-valid');
@@ -375,14 +418,14 @@ function validarCampo(input) {
     return isValid;
 }
 
-// --- 6. Manejo del Envío y Builder ---
+// --- 6. Recogida de Datos y Construcción Final ---
 
 function manejarEnvio(event) {
-    event.preventDefault();
+    event.preventDefault(); // Evitamos que la página se recargue
     const form = document.getElementById('registroForm');
     let formValido = true;
 
-    // Validar todos los campos
+    // Antes de terminar, validamos todo una última vez
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
         if (!validarCampo(input)) {
@@ -391,14 +434,14 @@ function manejarEnvio(event) {
     });
 
     if (!formValido) {
-        alert("Por favor, revise los errores en el formulario.");
+        alert("¡Ups! Parece que hay errores en el formulario. Por favor, revísalos.");
         return;
     }
 
-    // Usar Builder para construir el objeto Alumno
+    // Empezamos a construir el objeto Alumno usando el Builder
     const builder = new AlumnoBuilder();
 
-    // A. Datos del Alumno
+    // Recogemos Datos del Alumno (A)
     builder.setDatosPersonales({
         nombre: document.getElementById('nombreAlumno').value,
         apellidos: document.getElementById('apellidosAlumno').value,
@@ -407,7 +450,7 @@ function manejarEnvio(event) {
         idiomas: Array.from(document.getElementById('idiomasAlumno').selectedOptions).map(o => o.value)
     });
 
-    // B. Familiares
+    // Recogemos Familiares (B)
     document.querySelectorAll('.familiar-block').forEach(block => {
         builder.addFamiliar({
             nombre: block.querySelector('.fam-nombre').value,
@@ -420,7 +463,7 @@ function manejarEnvio(event) {
         });
     });
 
-    // C. Dirección
+    // Recogemos Dirección (C)
     builder.setDireccion({
         pais: document.getElementById('pais').value,
         ciudad: document.getElementById('ciudad').value,
@@ -429,7 +472,7 @@ function manejarEnvio(event) {
         cp: document.getElementById('cp').value
     });
 
-    // D. Académicos
+    // Recogemos Académicos (D)
     builder.setDatosAcademicos({
         colegio: document.getElementById('colegio').value,
         nivelAlcanzado: document.getElementById('nivelAlcanzado').value,
@@ -437,18 +480,19 @@ function manejarEnvio(event) {
         nivelSolicitado: document.getElementById('nivelSolicitado').value
     });
 
-    // E. Médicos
+    // Recogemos Médicos (E)
     builder.setInfoMedica({
         alergias: Array.from(document.getElementById('alergias').selectedOptions).map(o => o.value),
         medicacion: document.getElementById('medicacion').value
     });
 
+    // Obtenemos el objeto finalizado
     const elAlumno = builder.build();
 
-    // Mostrar Resumen en Modal
+    // Mostramos el resumen en la ventana emergente (Modal)
     const modalBody = document.getElementById('modalBody');
     modalBody.innerHTML = elAlumno.getResumen();
-    
+
     const bootstrapModal = new bootstrap.Modal(document.getElementById('resumenModal'));
     bootstrapModal.show();
 }

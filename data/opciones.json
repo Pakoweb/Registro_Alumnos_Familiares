@@ -5,7 +5,7 @@
   "alergias": ["Polen", "Ácaros", "Lactosa", "Gluten", "Frutos secos", "Penicilina", "Pelo de animales", "Ninguna"],
   "nivelesEstudios": ["Primaria", "ESO", "Bachillerato", "Grado Medio", "Grado Superior", "Grado Universitario", "Máster", "Doctorado"],
   "nivelesSolicitados": ["1º Primaria", "2º Primaria", "3º Primaria", "4º Primaria", "5º Primaria", "6º Primaria", "1º ESO", "2º ESO", "3º ESO", "4º ESO", "1º Bachillerato", "2º Bachillerato"],
-  "ciudadesNacimiento": ["Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza", "Málaga", "Murcia", "Palma", "Las Palmas", "Bilbao"],
+  "ciudadesNacimiento": ["A Coruña","Albacete","Alicante","Almería","Ávila","Badajoz","Barcelona","Bilbao","Burgos","Cáceres","Cádiz","Castellón de la Plana","Ceuta","Ciudad Real","Córdoba","Cuenca","Girona","Granada","Guadalajara","Huelva","Huesca","Jaén","Las Palmas de Gran Canaria","León","Lleida","Logroño","Lugo","Madrid","Málaga","Melilla","Mérida","Murcia","Ourense","Oviedo","Palencia","Palma","Pamplona","Pontevedra","Salamanca","San Sebastián","Santa Cruz de Tenerife","Santander","Segovia","Sevilla","Soria","Tarragona","Teruel","Toledo","Valencia","Valladolid","Vitoria-Gasteiz","Zamora","Zaragoza"],
   "ubicaciones": [
     {
       "pais": "España",
@@ -21,7 +21,12 @@
         {
           "nombre": "Valencia",
           "poblaciones": ["Valencia Centro", "Torrent", "Gandía", "Paterna"]
+        },
+        {
+          "nombre": "Sevilla",
+          "poblaciones": ["Sevilla Centro", "Dos Hermanas", "Alcalá de Guadaíra", "Utrera"]
         }
+
       ]
     },
     {
